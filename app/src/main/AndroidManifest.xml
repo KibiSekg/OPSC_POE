@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OPSC_POE">
         <activity
-            android:name=".Achievements"
+            android:name=".Home"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
             android:exported="false" />
         <activity
             android:name=".Expense"

@@ -58,7 +58,7 @@ class Register : AppCompatActivity() {
             }
         }
 
-    }
+    }//end registerUserFunction
 
 
     //Function to navigate to Login page when Login button is pressed
@@ -114,5 +114,5 @@ class Register : AppCompatActivity() {
         } finally {
             connection.disconnect()
         }
-    }
+    }// end insertRow Function
 }

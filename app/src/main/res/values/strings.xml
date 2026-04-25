@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">OPSC_POE</string>
-    <string name="promptEmail">Email:</string>
-    <string name="promptName">Name:</string>
-    <string name="promptPassword">Password:</string>
-    <string name="welcomeText">Welcome - Login</string>
+    <string name="textEmail">Email:</string>
+    <string name="textName">Name:</string>
+    <string name="textPassword">Password:</string>
+    <string name="textConfirmPass">Confirm Password:</string>
+    <string name="welcomeText">Welcome</string>
+    <string name="btnTextLogin">Login</string>
+    <string name="btnTextRegister">Register</string>
 </resources>

@@ -20,5 +20,15 @@ class Login : AppCompatActivity() {
         }
     }
 
+    fun navigateToRegister(view: View) {
+
+        //navigating to register page using intent
+        //creating object for intent called navigate
+        val navigate = Intent(this@Login, Register :: class.java)//can just say 'this' instead of 'this@Login'
+
+        //start the next page
+        startActivity(navigate)
+    }
+
 
 }

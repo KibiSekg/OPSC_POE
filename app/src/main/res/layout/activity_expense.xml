@@ -6,17 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="5dp"
     tools:context=".Expense">
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Expense"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:text="Enter Amount"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-
+        android:textSize="25sp"
+        android:textStyle="bold"
         />
 
     <EditText
@@ -27,6 +28,16 @@
         android:textSize="20dp"
         android:layout_gravity="center"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Category"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+
 
     <Button
         android:layout_width="match_parent"

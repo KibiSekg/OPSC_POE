@@ -6,7 +6,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="5dp"
     tools:context=".Profile">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:layout_margin="5dp"
+            />
+
+        <Button
+            android:id="@+id/btnExpInc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exp/Inc"
+            android:layout_margin="5dp"
+            />
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:layout_margin="5dp"
+            />
+
+    </LinearLayout>
 
 
 

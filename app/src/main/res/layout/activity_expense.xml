@@ -14,19 +14,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter Amount"
-        android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:textSize="25sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         />
 
     <EditText
+        android:id="@+id/etAmnt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:hint="R 0.00"
-        android:textSize="20dp"
-        android:layout_gravity="center"
+        android:layout_margin="5dp"
         />
 
     <TextView
@@ -35,16 +34,78 @@
         android:text="Select Category"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_margin="5dp"
         />
 
+    <EditText
+        android:id="@+id/etCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter Category (e.g. Transport, Food)"
+        android:layout_margin="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Transaction type"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        />
+    <EditText
+        android:id="@+id/etTransactionType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Income or Expense"
+        android:layout_margin="5dp"
+        />
 
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Transaction"
+        android:layout_margin="5dp"
+        android:onClick="saveTransaction"
+        android:layout_gravity="center"
+        />
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log Expense"
-        android:layout_margin="5dp"
-        />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:layout_margin="5dp"
+            />
+
+        <Button
+            android:id="@+id/btnExpInc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exp/Inc"
+            android:layout_margin="5dp"
+            />
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:layout_margin="5dp"
+            />
+
+    </LinearLayout>
+
 
 
 </LinearLayout>

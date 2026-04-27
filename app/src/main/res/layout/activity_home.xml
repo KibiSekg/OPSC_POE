@@ -27,6 +27,7 @@
             />
 
         <TextView
+            android:id="@+id/etMonthlyGoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R 0.00 - No Budget Set"
@@ -53,6 +54,7 @@
             />
 
         <TextView
+            android:id="@+id/etTotalBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R 0.00"
@@ -85,6 +87,7 @@
                 />
 
             <TextView
+                android:id="@+id/etTotalIncome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R 0.00"
@@ -111,6 +114,7 @@
                 />
 
             <TextView
+                android:id="@+id/etTotalExp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R 0.00"
@@ -143,6 +147,7 @@
                 android:layout_margin="5dp"
                 />
             <TextView
+                android:id="@+id/tvTopCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="No Category"
@@ -167,6 +172,7 @@
                 />
 
             <TextView
+                android:id="@+id/tvDailyAvg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R 0.00 - No Expenses"

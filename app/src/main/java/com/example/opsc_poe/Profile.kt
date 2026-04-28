@@ -68,7 +68,7 @@ class Profile : AppCompatActivity(), View.OnClickListener {
         btnThisMonth = findViewById(R.id.btnThisMonth)
         btnLastMonth = findViewById(R.id.btnLastMonth)
 
-        tvMonthlyBalance = findViewById(R.id.tvMonthlyBalance)
+        tvMonthlyBalance = findViewById(R.id.etMonthlyBudget)
         etProfLossStatus = findViewById(R.id.etProfLossStatus)
         tvNumOfInc = findViewById(R.id.tvNumOfInc)
         tvNumOfExp = findViewById(R.id.tvNumOfExp)

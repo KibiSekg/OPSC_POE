@@ -21,7 +21,7 @@
 
     <EditText
         android:id="@+id/etAmnt"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:hint="R 0.00"
@@ -39,9 +39,10 @@
 
     <EditText
         android:id="@+id/etCategory"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Enter Category (e.g. Transport, Food)"
+        android:inputType="text"
         android:layout_margin="5dp"
         />
 
@@ -55,9 +56,28 @@
         />
     <EditText
         android:id="@+id/etTransactionType"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Income or Expense"
+        android:inputType="text"
+        android:layout_margin="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Date Of Transaction"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        />
+
+    <EditText
+        android:id="@+id/etTransactionDate"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="yyyy-mm-dd (Include hyphens)"
+        android:inputType="date"
         android:layout_margin="5dp"
         />
 

@@ -18,6 +18,7 @@ import java.net.URL
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.concurrent.thread
+import com.google.android.material.textfield.TextInputEditText
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,8 @@ class Login : AppCompatActivity() {
     }
 
     fun loginUser(view: View){
-        var email : EditText = findViewById(R.id.etEmail)
-        var password : EditText = findViewById(R.id.etPassword)
+        var email: TextInputEditText = findViewById(R.id.etEmail)
+        var password: TextInputEditText = findViewById(R.id.etPassword)
 
         thread {
             val data = getRows("user_ef3f2aac_poeUsers")

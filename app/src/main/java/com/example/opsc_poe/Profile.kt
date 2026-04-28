@@ -20,7 +20,12 @@ import kotlin.concurrent.thread
 import android.widget.Toast
 //import them at the top of the code
 import org.json.JSONArray
+import android.widget.LinearLayout
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.concurrent.thread
+
 
 
 class Profile : AppCompatActivity(), View.OnClickListener {
@@ -29,6 +34,9 @@ class Profile : AppCompatActivity(), View.OnClickListener {
     lateinit var btnExpInc : Button
     lateinit var btnProfile : Button
     lateinit var btnSetMonthlyBudg: Button
+    lateinit var btnThisWeek: Button
+    lateinit var btnThisMonth: Button
+    lateinit var btnLastMonth: Button
 
     lateinit var tvProfileId: TextView
     lateinit var tvMonthlyBalance: TextView
@@ -36,6 +44,7 @@ class Profile : AppCompatActivity(), View.OnClickListener {
     lateinit var tvNumOfInc: TextView
     lateinit var tvNumOfExp: TextView
     lateinit var etMonthlyBudget: EditText
+    lateinit var llResultsContainer: LinearLayout
 
     // Store monthly budget to use in balance calculation
     var monthlyBudget = 0.0
@@ -55,13 +64,17 @@ class Profile : AppCompatActivity(), View.OnClickListener {
         btnExpInc = findViewById(R.id.btnExpInc)
         btnProfile = findViewById(R.id.btnProfile)
         btnSetMonthlyBudg = findViewById(R.id.btnSetMonthlyBudg)
+        btnThisWeek = findViewById(R.id.btnThisWeek)
+        btnThisMonth = findViewById(R.id.btnThisMonth)
+        btnLastMonth = findViewById(R.id.btnLastMonth)
 
-        tvProfileId = findViewById(R.id.tvProfileId)
         tvMonthlyBalance = findViewById(R.id.tvMonthlyBalance)
         etProfLossStatus = findViewById(R.id.etProfLossStatus)
         tvNumOfInc = findViewById(R.id.tvNumOfInc)
         tvNumOfExp = findViewById(R.id.tvNumOfExp)
         etMonthlyBudget = findViewById(R.id.etMonthlyBudget)
+        llResultsContainer = findViewById(R.id.llResultsContainer)
+
 
         btnHome.setOnClickListener(this)
         btnExpInc.setOnClickListener(this)
@@ -85,10 +98,182 @@ class Profile : AppCompatActivity(), View.OnClickListener {
 
         }// end of btnSetMonthlyBudg click listener
 
+        // Period filter button listeners
+        btnThisWeek.setOnClickListener {
+            filterByPeriod("thisWeek")
+        }// end of btnThisWeek
+
+        btnThisMonth.setOnClickListener {
+            filterByPeriod("thisMonth")
+        }// end of btnThisMonth
+
+        btnLastMonth.setOnClickListener {
+            filterByPeriod("lastMonth")
+        }// end of btnLastMonth
+
         // Load transactions when page opens
         loadTransactions()
 
     }//end OnCreate
+
+    fun filterByPeriod(period: String) {
+        thread {
+            val data = getRows("user_ef3f2aac_transactions")
+
+            runOnUiThread {
+
+                // Clear previous results
+                llResultsContainer.removeAllViews()
+
+                if (data == null || data.length() == 0) {
+                    val tvEmpty = TextView(this)
+                    tvEmpty.text = "No transactions found"
+                    tvEmpty.setPadding(8, 8, 8, 8)
+                    llResultsContainer.addView(tvEmpty)
+                    return@runOnUiThread
+                }// end of if
+
+                // Get date range based on selected period
+                val calendar = Calendar.getInstance()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+                // Calculate start and end dates for the selected period
+                val startDate: String
+                val endDate: String
+
+                when (period) {
+
+                    "thisWeek" -> {
+                        // Start = Monday of this week, End = today
+                        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+                        startDate = dateFormat.format(calendar.time)
+                        endDate = dateFormat.format(Calendar.getInstance().time)
+                    }// end of thisWeek
+
+                    "thisMonth" -> {
+                        // Start = 1st of this month, End = today
+                        calendar.set(Calendar.DAY_OF_MONTH, 1)
+                        startDate = dateFormat.format(calendar.time)
+                        endDate = dateFormat.format(Calendar.getInstance().time)
+                    }// end of thisMonth
+
+                    "lastMonth" -> {
+                        // Start = 1st of last month, End = last day of last month
+                        calendar.add(Calendar.MONTH, -1)
+                        calendar.set(Calendar.DAY_OF_MONTH, 1)
+                        startDate = dateFormat.format(calendar.time)
+                        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+                        endDate = dateFormat.format(calendar.time)
+                    }// end of lastMonth
+
+                    else -> return@runOnUiThread
+
+                }// end of when
+
+                // Collect filtered transactions
+                val filteredEntries = mutableListOf<JSONObject>()
+                val categorySet = mutableSetOf<String>()
+
+                for (i in 0 until data.length()) {
+                    val row = data.getJSONObject(i)
+                    val date = row.optString("date", "")
+
+                    // Check if date falls within range
+                    if (date >= startDate && date <= endDate) {
+                        filteredEntries.add(row)
+                        val category = row.optString("Category", "").lowercase()
+                        if (category.isNotEmpty()) {
+                            categorySet.add(category)
+                        }// end of if
+                    }// end of if
+
+                }// end of for loop
+
+                // ---------------------------------
+                // DISPLAY CATEGORIES FOR PERIOD
+                // ---------------------------------
+                val tvCatHeader = TextView(this)
+                tvCatHeader.text = "── Categories ──"
+                tvCatHeader.textSize = 17f
+                tvCatHeader.setPadding(8, 16, 8, 8)
+                llResultsContainer.addView(tvCatHeader)
+
+                if (categorySet.isEmpty()) {
+                    val tvNoCat = TextView(this)
+                    tvNoCat.text = "No categories found for this period"
+                    tvNoCat.setPadding(8, 4, 8, 4)
+                    llResultsContainer.addView(tvNoCat)
+                } else {
+                    for (category in categorySet) {
+                        val tvCat = TextView(this)
+                        tvCat.text = "• $category"
+                        tvCat.textSize = 15f
+                        tvCat.setPadding(8, 4, 8, 4)
+                        llResultsContainer.addView(tvCat)
+                    }// end of for loop
+                }// end of if
+
+                // ---------------------------------
+                // DISPLAY ENTRIES FOR PERIOD
+                // ---------------------------------
+                val tvEntryHeader = TextView(this)
+                tvEntryHeader.text = "── Entries ──"
+                tvEntryHeader.textSize = 17f
+                tvEntryHeader.setPadding(8, 16, 8, 8)
+                llResultsContainer.addView(tvEntryHeader)
+
+                if (filteredEntries.isEmpty()) {
+                    val tvNoEntry = TextView(this)
+                    tvNoEntry.text = "No entries found for this period"
+                    tvNoEntry.setPadding(8, 4, 8, 4)
+                    llResultsContainer.addView(tvNoEntry)
+                } else {
+                    for (entry in filteredEntries) {
+                        val amount = entry.optString("amount", "0")
+                        val type = entry.optString("transactionType", "")
+                        val category = entry.optString("Category", "")
+                        val date = entry.optString("date", "")
+
+                        // Create a row for each entry
+                        val rowLayout = LinearLayout(this)
+                        rowLayout.orientation = LinearLayout.HORIZONTAL
+                        rowLayout.setPadding(8, 6, 8, 6)
+
+                        // Date
+                        val tvDate = TextView(this)
+                        tvDate.text = date
+                        tvDate.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                        rowLayout.addView(tvDate)
+
+                        // Category
+                        val tvCat = TextView(this)
+                        tvCat.text = category
+                        tvCat.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                        rowLayout.addView(tvCat)
+
+                        // Type
+                        val tvType = TextView(this)
+                        tvType.text = type
+                        tvType.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                        rowLayout.addView(tvType)
+
+                        // Amount
+                        val tvAmt = TextView(this)
+                        tvAmt.text = "R %.2f".format(amount.toDoubleOrNull() ?: 0.0)
+                        tvAmt.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                        rowLayout.addView(tvAmt)
+
+                        // Add row to container
+                        llResultsContainer.addView(rowLayout)
+
+                    }// end of for loop
+                }// end of if
+
+            }// end of runOnUiThread
+
+        }// end of thread
+
+    }// end of filterByPeriod
 
     fun getRows(tableName: String): JSONArray? {
         val url = URL("https://studyplugtools.cloud/you_connect.php/$tableName/get")
@@ -298,10 +483,7 @@ class Profile : AppCompatActivity(), View.OnClickListener {
     fun saveMonthlyBudget(budget: Double) {
         thread {
             val rowData = mapOf(
-                "monthlyBudget" to budget.toString(),
-                "month" to java.util.Calendar.getInstance()
-                    .getDisplayName(java.util.Calendar.MONTH, java.util.Calendar.LONG, java.util.Locale.getDefault()),
-                "year" to java.util.Calendar.getInstance().get(java.util.Calendar.YEAR).toString()
+                "monthlyBudget" to budget.toString()
             )
 
             val response = insertRow("user_ef3f2aac_budget", rowData)

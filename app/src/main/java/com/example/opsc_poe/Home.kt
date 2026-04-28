@@ -57,7 +57,33 @@ class Home : AppCompatActivity(), View.OnClickListener {
         tvDailyAvg = findViewById(R.id.tvDailyAvg)
 
         loadTransactions()
+        loadMonthlyBudget()
+
     }//end of onCreate function
+
+    fun loadMonthlyBudget() {
+        thread {
+            val data = getRows("user_ef3f2aac_budget")
+
+            runOnUiThread {
+                if (data == null || data.length() == 0) {
+                    // No budget set yet, keep default text
+                    etMonthlyGoal.text = "R 0.00 - No Budget Set"
+                    return@runOnUiThread
+                }// end of if
+
+                // Get the last row which is the most recently set budget
+                val lastRow = data.getJSONObject(data.length() - 1)
+                val budget = lastRow.optString("monthlyBudget", "0")
+
+                // Display the monthly budget on the home screen
+                etMonthlyGoal.text = "R %.2f".format(budget.toDoubleOrNull() ?: 0.0)
+
+            }// end of runOnUiThread
+
+        }// end of thread
+
+    }// end of loadMonthlyBudget
 
     fun loadTransactions() {
         thread {

@@ -43,21 +43,25 @@ class Expense : AppCompatActivity(), View.OnClickListener {
         btnExpInc.setOnClickListener(this)
         btnProfile.setOnClickListener(this)
     }
-    fun saveTransaction(view: View){
+    fun saveTransaction(view: View) {
 
-        var amount : EditText = findViewById(R.id.etAmnt)
-        var transType : EditText = findViewById(R.id.etTransactionType)
-        var category: EditText = findViewById(R.id.etCategory)
+        val amount: EditText = findViewById(R.id.etAmnt)
+        val transType: EditText = findViewById(R.id.etTransactionType)
+        val category: EditText = findViewById(R.id.etCategory)
+        val date: EditText = findViewById(R.id.etTransactionDate)
 
+        // Validate fields before saving
+        if (amount.text.isEmpty() || transType.text.isEmpty() || category.text.isEmpty() || date.text.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }// end of if
 
-        // -------------------------------
-// HOW TO Insert, put this in a function or in the main under the override fun Oncreate
-// -------------------------------
         thread {
             val rowData = mapOf(
                 "amount" to amount.text.toString(),
                 "transactionType" to transType.text.toString().lowercase(),
-                "Category" to category.text.toString().lowercase() ,
+                "Category" to category.text.toString().lowercase(),
+                "date" to date.text.toString()
             )
 
             val response = insertRow(
@@ -68,12 +72,13 @@ class Expense : AppCompatActivity(), View.OnClickListener {
             // Update UI on main thread
             runOnUiThread {
                 println(response)
-                // or show Toast / TextView
-                Toast.makeText(this,response.toString(),Toast.LENGTH_LONG).show()
-            }
-        }
+                Toast.makeText(this, "Transaction Saved!", Toast.LENGTH_LONG).show()
+            }// end of runOnUiThread
 
-    }
+        }// end of thread
+
+    }// end of saveTransaction
+
     override fun onClick(v: View?){
 
         when(v?.id){
@@ -112,7 +117,7 @@ class Expense : AppCompatActivity(), View.OnClickListener {
 
     fun insertRow(
         tableName: String,
-        data: Map< String, Any?>
+        data: Map<String, Any?>
     ): String? {
         val url = URL("https://studyplugtools.cloud/you_connect.php/$tableName/insert")
         val connection = url.openConnection() as HttpURLConnection
@@ -123,7 +128,7 @@ class Expense : AppCompatActivity(), View.OnClickListener {
             connection.setRequestProperty("Accept", "application/json")
             connection.doOutput = true
 
-            // Build JSON payload (include nulls as empty strings if needed)
+            // Build JSON payload
             val payload = JSONObject()
             for ((key, value) in data) {
                 if (key != "id") {
@@ -153,6 +158,7 @@ class Expense : AppCompatActivity(), View.OnClickListener {
         } finally {
             connection.disconnect()
         }
-    }
+
+    }// end of insertRow
 
 }

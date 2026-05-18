@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -92,7 +93,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="@string/btnTextRegister"
+        android:backgroundTint="#6A1B9A"
         android:onClick="registerUser"
+        android:padding="10dp"
+        android:textAllCaps="false"
         />
 
     <LinearLayout
@@ -115,7 +119,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/btnTextLogin"
+            android:backgroundTint="#6A1B9A"
             android:onClick="navigateToLogin"
+            android:padding="10dp"
+            android:textAllCaps="false"
         />
     </LinearLayout>
 

@@ -18,6 +18,8 @@ import java.io.InputStreamReader
 import kotlin.concurrent.thread
 import android.widget.Toast
 import java.util.Locale
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 
 
 class Expense : AppCompatActivity(), View.OnClickListener {
@@ -35,6 +37,40 @@ class Expense : AppCompatActivity(), View.OnClickListener {
             insets
         }
 
+        val category = findViewById<Spinner>(R.id.spinnerCategory)
+
+        val categories = arrayOf(
+            "🍔Food",
+            "🛻Transport",
+            "🏓Entertainment",
+            "🛒Shopping",
+            "💡Utilities"
+        )
+
+        val categoryAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            categories
+        )
+
+        category.adapter = categoryAdapter
+
+        //transaction type spinner
+        val transType = findViewById<Spinner>(R.id.spinnerTransactionType)
+
+        val types = arrayOf(
+            "💸Expense",
+            "💰Income"
+        )
+
+        val typeAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            types
+        )
+        transType.adapter = typeAdapter
+
+
         btnHome = findViewById(R.id.btnHome)
         btnExpInc = findViewById(R.id.btnExpInc)
         btnProfile = findViewById(R.id.btnProfile)
@@ -46,12 +82,12 @@ class Expense : AppCompatActivity(), View.OnClickListener {
     fun saveTransaction(view: View) {
 
         val amount: EditText = findViewById(R.id.etAmnt)
-        val transType: EditText = findViewById(R.id.etTransactionType)
-        val category: EditText = findViewById(R.id.etCategory)
+        val transType: Spinner = findViewById<Spinner>(R.id.spinnerTransactionType)
+        val category: Spinner = findViewById<Spinner>(R.id.spinnerCategory)
         val date: EditText = findViewById(R.id.etTransactionDate)
 
         // Validate fields before saving
-        if (amount.text.isEmpty() || transType.text.isEmpty() || category.text.isEmpty() || date.text.isEmpty()) {
+        if (amount.text.isEmpty() || date.text.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }// end of if
@@ -59,8 +95,8 @@ class Expense : AppCompatActivity(), View.OnClickListener {
         thread {
             val rowData = mapOf(
                 "amount" to amount.text.toString(),
-                "transactionType" to transType.text.toString().lowercase(),
-                "Category" to category.text.toString().lowercase(),
+                "transactionType" to transType.selectedItem.toString().lowercase(),
+                "Category" to category.selectedItem.toString().lowercase(),
                 "date" to date.text.toString()
             )
 
@@ -72,7 +108,7 @@ class Expense : AppCompatActivity(), View.OnClickListener {
             // Update UI on main thread
             runOnUiThread {
                 println(response)
-                Toast.makeText(this, "Transaction Saved!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "🏆 Achievement Unlocked!\nTransaction Saved!", Toast.LENGTH_LONG).show()
             }// end of runOnUiThread
 
         }// end of thread

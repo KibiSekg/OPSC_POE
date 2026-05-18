@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,95 +18,77 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/top_homepage_card"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/outline_beenhere_24"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/teal_700">
+            android:text="Monthly Budget Goal"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center">
+        <TextView
+            android:id="@+id/etMonthlyGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R 0.00 - No Budget Set"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/teal_200"
+            android:layout_marginTop="8dp" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/outline_beenhere_24"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monthly Budget Goal"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/etMonthlyGoal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00 - No Budget Set"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/teal_200"
-                    android:layout_marginTop="8dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-<!--Total balance-->
+
+<!--bottom card-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/bottom_homepage_card"
+        android:orientation="vertical"
+        android:layout_marginBottom="11dp">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/teal_200">
+            android:text="Total Balance"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:alpha="0.9" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Balance"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:alpha="0.9" />
-
-                <TextView
-                    android:id="@+id/etTotalBalance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00"
-                    android:textSize="32sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="8dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/etTotalBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R 0.00"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp" />
 
 
     </LinearLayout>
@@ -113,224 +96,203 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:orientation="horizontal">
 
-        <!-- Income Card -->
-        <androidx.cardview.widget.CardView
+
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="140dp"
             android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/white">
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/homepage_cards_background"
+            android:padding="16dp">
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_income"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Income"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp" />
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_income"
-                    />
+        <TextView
+            android:id="@+id/etTotalIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R 0.00"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginTop="4dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Income"
-                    android:textSize="20sp"
-                    android:layout_marginTop="8dp" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/etTotalIncome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Expense Card -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="140dp"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/white">
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/homepage_cards_background"
+            android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_expense"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
+                android:text="Total Expense"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="8dp" />
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_expense"
-                    />
+            <TextView
+                android:id="@+id/etTotalExp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R 0.00"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Expense"
-                    android:textSize="20sp"
-                    android:layout_marginTop="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/etTotalExp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
 
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        android:background="@drawable/homepage_cards_background"
         android:gravity="center"
-        android:padding="5dp">
-        <!-- Top Category Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_category"/>
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/white">
+            android:text="Top Category"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_category"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Top Category"
-                    android:textSize="20sp"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/tvTopCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No Category"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="4dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Daily Average Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvTopCategory"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_calendar"
-                     />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Daily Average"
-                    android:textSize="20sp"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/tvDailyAvg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+            android:text="No Category"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginTop="4dp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
         android:gravity="center"
-        android:padding="5dp">
+        android:background="@drawable/homepage_cards_background"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <Button
-            android:id="@+id/btnHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home"
-            android:layout_margin="5dp"
-            android:shadowColor="@color/teal_700"
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_calendar"
             />
 
-        <Button
-            android:id="@+id/btnExpInc"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exp/Inc"
-            android:layout_margin="5dp"
-            />
+            android:text="Daily Average"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp" />
 
-        <Button
-            android:id="@+id/btnProfile"
+        <TextView
+            android:id="@+id/tvDailyAvg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
-            android:layout_margin="5dp"
-            />
+            android:text="R 0.00"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
 
+    </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+    <Button
+        android:id="@+id/btnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:layout_margin="5dp"
+        android:backgroundTint="#6A1B9A"
+        android:shadowColor="@color/teal_700"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        />
+
+    <Button
+        android:id="@+id/btnExpInc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exp/Inc"
+        android:backgroundTint="#6A1B9A"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        />
+
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:backgroundTint="#6A1B9A"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        />
+    </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
+    </LinearLayout>

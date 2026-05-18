@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/purple_500"
+    android:background="@drawable/background_gradient"
     android:gravity="center"
     android:padding="24dp"
     tools:context=".Login">
@@ -103,7 +103,8 @@
                 android:textSize="14sp"
                 android:onClick="loginUser"
                 app:cornerRadius="10dp"
-                android:backgroundTint="@color/purple_500"
+                android:backgroundTint="#6A1B9A"
+                android:textAllCaps="false"
                 android:layout_marginBottom="16dp" />
 
             <!-- Register Link -->

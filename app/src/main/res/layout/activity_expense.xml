@@ -3,18 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:padding="11dp"
     tools:context=".Expense">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/card_backgroung"
+    android:gravity="center"
+    android:layout_margin="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Amount"
+        android:text="💰 Enter Amount"
+        android:textColor="@color/white"
         android:layout_margin="5dp"
+        android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"
         />
@@ -23,52 +33,89 @@
         android:id="@+id/etAmnt"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:inputType="numberDecimal"
         android:hint="R 0.00"
-        android:layout_margin="5dp"
+        android:textColorHint="#B0BEC5"
+        android:layout_margin="10dp"
         />
+</LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/card_backgroung"
+        android:gravity="center"
+        android:layout_margin="10dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Category"
+        android:text="📂 Select Category"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         android:layout_margin="5dp"
         />
 
-    <EditText
-        android:id="@+id/etCategory"
+    <Spinner
+        android:id="@+id/spinnerCategory"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Enter Category (e.g. Transport, Food)"
         android:inputType="text"
+        android:textAlignment="center"
+        android:textColorHint="#B0BEC5"
         android:layout_margin="5dp"
         />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/card_backgroung"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_margin="10dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Transaction type"
+        android:text="🔄️ Enter Transaction type"
         android:textSize="18sp"
+        android:textColor="@color/white"
         android:textStyle="bold"
+        android:textAlignment="center"
         android:layout_margin="5dp"
         />
-    <EditText
-        android:id="@+id/etTransactionType"
+    <Spinner
+        android:id="@+id/spinnerTransactionType"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="Income or Expense"
         android:inputType="text"
+        android:textAlignment="center"
+        android:textColorHint="#B0BEC5"
         android:layout_margin="5dp"
         />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/card_backgroung"
+        android:gravity="center"
+        android:layout_margin="10dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Date Of Transaction"
+        android:text="📆 Enter Date Of Transaction"
         android:textSize="18sp"
+        android:textColor="@color/white"
         android:textStyle="bold"
+        android:textAlignment="center"
         android:layout_margin="5dp"
         />
 
@@ -78,8 +125,18 @@
         android:layout_height="wrap_content"
         android:hint="yyyy-mm-dd (Include hyphens)"
         android:inputType="date"
+        android:textAlignment="center"
+        android:textColorHint="#B0BEC5"
         android:layout_margin="5dp"
         />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tip: Track daily spending to improve savings."
+            android:textColor="#B0BEC5"
+            android:textSize="12sp"
+            android:layout_marginTop="20dp"/>
 
 
     <Button
@@ -87,11 +144,14 @@
         android:layout_height="wrap_content"
         android:text="Save Transaction"
         android:layout_margin="5dp"
+        android:backgroundTint="#6A1B9A"
         android:onClick="saveTransaction"
         android:layout_gravity="center"
+        android:padding="10dp"
+        android:textAllCaps="false"
         />
 
-
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -105,7 +165,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Home"
+            android:backgroundTint="#6A1B9A"
             android:layout_margin="5dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
             />
 
         <Button
@@ -113,7 +176,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exp/Inc"
+            android:backgroundTint="#6A1B9A"
             android:layout_margin="5dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
             />
 
         <Button
@@ -121,7 +187,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profile"
+            android:backgroundTint="#6A1B9A"
+            android:padding="10dp"
             android:layout_margin="5dp"
+            android:textAllCaps="false"
             />
 
     </LinearLayout>

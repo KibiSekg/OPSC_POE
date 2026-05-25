@@ -1,5 +1,11 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true" android:height="50dp" android:tint="#69D4A8" android:viewportHeight="960" android:viewportWidth="960" android:width="50dp">
-      
-    <path android:fillColor="@android:color/white" android:pathData="M240,600L520,600L600,520L240,520L240,600ZM240,440L480,440L480,360L240,360L240,440ZM160,280L160,680L440,680L360,760L80,760L80,200L880,200L880,320L800,320L800,280L160,280ZM916,492Q921,497 921,503Q921,509 916,514L880,550L810,480L846,444Q851,439 857,439Q863,439 868,444L916,492ZM520,840L520,770L786,504L856,574L590,840L520,840ZM160,280L160,280L160,320L160,680L160,680L160,280Z"/>
-    
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Place this file at: res/drawable/ic_expense.xml  (replaces existing if present) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M21,18v1c0,1.1-0.9,2-2,2H5c-1.11,0-2-0.9-2-2V5c0-1.1,0.89-2,2-2h14c1.1,0 2,0.9 2,2v1h-9c-1.11,0-2,0.9-2,2v8c0,1.1,0.89,2 2,2h9zM12,16h10V8H12v8zM16,13.5c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5 1.5-1.5 1.5,0.67 1.5,1.5-0.67,1.5-1.5,1.5z" />
 </vector>

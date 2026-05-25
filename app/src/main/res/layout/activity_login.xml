@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_gradient"
+    android:background="@color/purple_500"
     android:gravity="center"
     android:padding="24dp"
     tools:context=".Login">
@@ -32,7 +32,7 @@
 
     <!-- Login Card -->
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="365dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"

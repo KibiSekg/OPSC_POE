@@ -85,35 +85,50 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Category -->
+                        <!-- Category Dropdown -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Category (e.g. Food, Transport)"
-                            android:layout_marginBottom="12dp">
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:hint="Category"
+                            android:layout_marginBottom="4dp">
 
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etCategory"
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerCategory"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="text" />
+                                android:focusable="false"
+                                android:cursorVisible="false"
+                                android:inputType="none" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Transaction Type -->
+                        <!-- Add Custom Category Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddCategory"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+ Add Custom Category"
+                            android:textSize="13sp"
+                            android:layout_marginBottom="12dp"
+                            app:cornerRadius="8dp" />
+
+                        <!-- Transaction Type Dropdown -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Transaction Type (Income / Expense)"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:hint="Transaction Type"
                             android:layout_marginBottom="12dp">
 
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etTransactionType"
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerTransType"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="text" />
+                                android:focusable="false"
+                                android:cursorVisible="false"
+                                android:inputType="none" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 

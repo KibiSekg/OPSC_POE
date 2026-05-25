@@ -13,6 +13,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.opsc_poe.db.AppDatabase
 import com.example.opsc_poe.db.entities.Transaction
 import kotlin.concurrent.thread
+import android.widget.Toast
+import java.util.Locale
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 
 class Expense : AppCompatActivity() {
 
@@ -41,8 +45,8 @@ class Expense : AppCompatActivity() {
 
     fun saveTransaction(view: View) {
         val amount: EditText = findViewById(R.id.etAmnt)
-        val transType: EditText = findViewById(R.id.etTransactionType)
-        val category: EditText = findViewById(R.id.etCategory)
+        val transType: Spinner = findViewById<Spinner>(R.id.spinnerTransactionType)
+        val category: Spinner = findViewById<Spinner>(R.id.spinnerCategory)
         val date: EditText = findViewById(R.id.etTransactionDate)
 
         if (amount.text.isEmpty() || transType.text.isEmpty() || category.text.isEmpty() || date.text.isEmpty()) {

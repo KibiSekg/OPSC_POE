@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Place this file at: res/menu/nav_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
@@ -13,6 +12,11 @@
             android:id="@+id/nav_expense"
             android:icon="@drawable/ic_expense"
             android:title="Add Transaction" />
+
+        <item
+            android:id="@+id/nav_analytics"
+            android:icon="@drawable/ic_analytics"
+            android:title="Analytics" />
 
         <item
             android:id="@+id/nav_profile"

@@ -1,6 +1,6 @@
 package com.example.opsc_poe
 
-import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.opsc_poe.db.AppDatabase
+import com.example.opsc_poe.db.entities.Budget // Ensure you import your Budget entity class
 import kotlin.concurrent.thread
 
 class Home : AppCompatActivity() {
@@ -43,13 +44,71 @@ class Home : AppCompatActivity() {
         progressBudget = findViewById(R.id.progressBudget)
         tvBudgetStatus = findViewById(R.id.tvBudgetStatus)
 
+        val btnSetBudget: com.google.android.material.button.MaterialButton = findViewById(R.id.btnSetBudget)
+
+        btnSetBudget.setOnClickListener {
+            showSetBudgetBottomSheet()
+        }
         loadData()
     }
 
     override fun onResume() {
         super.onResume()
-        // Reload every time the user comes back to this screen
         loadData()
+    }
+
+    private fun showSetBudgetBottomSheet() {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_set_budget, null)
+
+        val etBudgetAmount = sheetView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etBudgetAmount)
+        val btnSaveBudget = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveBudget)
+
+        // Read the existing budget value from Room directly to pre-fill the field
+        thread {
+            val db = AppDatabase.getDatabase(this)
+            val currentBudget = db.budgetDao().getLatestBudget()
+
+            runOnUiThread {
+                if (currentBudget != null && currentBudget.monthlyBudget > 0) {
+                    etBudgetAmount.setText(currentBudget.monthlyBudget.toString())
+                }
+            }
+        }
+
+        btnSaveBudget.setOnClickListener {
+            val budgetString = etBudgetAmount.text.toString()
+
+            if (budgetString.isEmpty()) {
+                etBudgetAmount.error = "Please enter an amount"
+                return@setOnClickListener
+            }
+
+            val budgetAmount = budgetString.toDoubleOrNull()
+            if (budgetAmount != null && budgetAmount > 0) {
+
+                // Write directly into your Room DB backend database tables
+                thread {
+                    val db = AppDatabase.getDatabase(this)
+
+                    // Create a budget object instance matching your project schema setup
+                    val newBudget = Budget(monthlyBudget = budgetAmount)
+                    db.budgetDao().insertBudget(newBudget)
+
+                    runOnUiThread {
+                        android.widget.Toast.makeText(this, "Monthly budget updated!", android.widget.Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                        // Instantly redraw UI to display updated calculation formulas
+                        loadData()
+                    }
+                }
+            } else {
+                etBudgetAmount.error = "Please enter a valid positive number"
+            }
+        }
+
+        dialog.setContentView(sheetView)
+        dialog.show()
     }
 
     private fun loadData() {
@@ -72,14 +131,12 @@ class Home : AppCompatActivity() {
                 }
             }
 
-            // Balance = income - expense (money you currently have)
             val totalBalance = totalIncome - totalExpense
             val topCategory  = categoryCount.maxByOrNull { it.value }?.key ?: "None"
             val expenseCount = transactions.count { it.transactionType.lowercase() == "expense" }
             val dailyAvg     = if (expenseCount > 0) totalExpense / expenseCount else 0.0
 
             val budgetAmount   = budget?.monthlyBudget ?: 0.0
-            // Progress = how much of budget has been spent (capped at 100%)
             val spentPercent   = if (budgetAmount > 0) ((totalExpense / budgetAmount) * 100).toInt().coerceIn(0, 100) else 0
             val remaining      = budgetAmount - totalExpense
 
@@ -91,10 +148,10 @@ class Home : AppCompatActivity() {
                 tvTopCategory.text  = topCategory
                 tvDailyAvg.text     = if (dailyAvg > 0) "R %.2f".format(dailyAvg) else "R 0.00"
 
-                // Progress bar
+                // Progress bar updating calculations cleanly
                 progressBudget.progress = spentPercent
                 tvBudgetStatus.text = when {
-                    budgetAmount <= 0    -> "Set a budget in Profile to track spending"
+                    budgetAmount <= 0    -> "Tap 'Set' to create your monthly budget goal"
                     remaining < 0        -> "Over budget by R %.2f  ($spentPercent%%)".format(-remaining)
                     spentPercent >= 90   -> "Almost at limit — R %.2f remaining ($spentPercent%%)".format(remaining)
                     else                 -> "R %.2f remaining of budget ($spentPercent%% used)".format(remaining)

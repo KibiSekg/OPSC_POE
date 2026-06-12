@@ -19,7 +19,8 @@ class Register : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -31,21 +32,43 @@ class Register : AppCompatActivity() {
         val email: EditText = findViewById(R.id.etEmail)
         val password: EditText = findViewById(R.id.etPassword)
 
-        if (name.text.isEmpty() || email.text.isEmpty() || password.text.isEmpty()) {
+        val nameText = name.text.toString().trim()
+        val emailText = email.text.toString().trim()
+        val passwordText = password.text.toString().trim()
+
+        if (nameText.isEmpty() || emailText.isEmpty() || passwordText.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val user = User(
-            name = name.text.toString(),
-            email = email.text.toString(),
-            password = password.text.toString()
-        )
-
         thread {
-            AppDatabase.getDatabase(this).userDao().insertUser(user)
-            runOnUiThread {
-                Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show()
+            val db = AppDatabase.getDatabase(this)
+
+            // 1. Check if the user already exists in your table structure
+            val existingUser = db.userDao().getUserByEmail(emailText)
+
+            if (existingUser != null) {
+                // If user is found, update UI on main thread to warn them
+                runOnUiThread {
+                    Toast.makeText(this, "Email already exists! Please log in.", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                // 2. If no record exists, insert the new user profile safely
+                val newUser = User(
+                    name = nameText,
+                    email = emailText,
+                    password = passwordText
+                )
+                db.userDao().insertUser(newUser)
+
+                runOnUiThread {
+                    Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show()
+
+                    // Route user straight back to Login page cleanly
+                    val intent = Intent(this@Register, Login::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
     }

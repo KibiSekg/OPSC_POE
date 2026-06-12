@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".Expense">
 
-    <!-- ==================== MAIN CONTENT ==================== -->
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:orientation="vertical"
         android:background="#F5F5F5">
 
-        <!-- Top App Bar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -24,9 +22,9 @@
             android:background="@color/purple_500"
             app:title="Add Transaction"
             app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_menu"
             app:navigationIconTint="@color/white" />
 
-        <!-- Form content -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -38,7 +36,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Form Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,17 +61,17 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Fill in the details below"
-                            android:textSize="13sp"
+                            android:text="Fields marked with * are required"
+                            android:textSize="12sp"
                             android:textColor="@color/gray"
                             android:layout_marginBottom="20dp" />
 
-                        <!-- Amount -->
+                        <!-- Amount * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Amount (R)"
+                            android:hint="Amount (R) *"
                             android:layout_marginBottom="12dp">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -85,41 +82,12 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Category Dropdown -->
+                        <!-- Transaction Type * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:hint="Category"
-                            android:layout_marginBottom="4dp">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/spinnerCategory"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:focusable="false"
-                                android:cursorVisible="false"
-                                android:inputType="none" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <!-- Add Custom Category Button -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAddCategory"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+ Add Custom Category"
-                            android:textSize="13sp"
-                            android:layout_marginBottom="12dp"
-                            app:cornerRadius="8dp" />
-
-                        <!-- Transaction Type Dropdown -->
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:hint="Transaction Type"
+                            android:hint="Transaction Type *"
                             android:layout_marginBottom="12dp">
 
                             <AutoCompleteTextView
@@ -132,21 +100,129 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Date -->
+                        <!-- Category * -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:hint="Category *"
+                            android:layout_marginBottom="4dp">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="false"
+                                android:cursorVisible="false"
+                                android:inputType="none" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Add custom category -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddCategory"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+ Add Custom Category"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="12dp"
+                            app:cornerRadius="8dp"
+                            app:strokeColor="@color/purple_500"
+                            android:textColor="@color/purple_500" />
+
+                        <!-- Date * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Date (yyyy-mm-dd)"
-                            android:layout_marginBottom="24dp">
+                            app:endIconMode="custom"
+                            app:endIconDrawable="@drawable/ic_calendar"
+                            android:layout_marginBottom="20dp">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etTransactionDate"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="date" />
+                                android:focusable="false"
+                                android:cursorVisible="false"
+                                android:inputType="none"
+                                android:hint="Tap to select date*"
+                                android:onClick="showDatePickerFromXml" />
 
                         </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- ── Photo Section ── -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Attach Photo (Optional)"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="10dp" />
+
+                        <!-- Photo preview (hidden until photo selected) -->
+                        <FrameLayout
+                            android:id="@+id/flPhotoPreview"
+                            android:layout_width="match_parent"
+                            android:layout_height="180dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/rounded_outline_bg"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/ivExpensePhoto"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop" />
+
+                            <ImageView
+                                android:id="@+id/ivRemovePhoto"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="8dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_red_bg"
+                                android:padding="6dp" />
+
+                        </FrameLayout>
+
+                        <!-- Photo action buttons -->
+                        <LinearLayout
+                            android:id="@+id/llPhotoButtons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="20dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnTakePhoto"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="📷 Camera"
+                                android:textSize="13sp"
+                                app:cornerRadius="10dp"
+                                app:strokeColor="@color/purple_500"
+                                android:textColor="@color/purple_500" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPickPhoto"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="🖼️ Gallery"
+                                android:textSize="13sp"
+                                app:cornerRadius="10dp"
+                                app:strokeColor="@color/purple_500"
+                                android:textColor="@color/purple_500" />
+
+                        </LinearLayout>
 
                         <!-- Save Button -->
                         <com.google.android.material.button.MaterialButton
@@ -166,7 +242,6 @@
 
         </ScrollView>
 
-        <!-- Bottom Navigation View -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
@@ -179,7 +254,6 @@
 
     </LinearLayout>
 
-    <!-- ==================== NAVIGATION DRAWER ==================== -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="280dp"

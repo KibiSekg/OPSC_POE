@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".Profile">
 
-    <!-- ==================== MAIN CONTENT ==================== -->
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:orientation="vertical"
         android:background="#F5F5F5">
 
-        <!-- Top App Bar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -24,6 +22,7 @@
             android:background="@color/purple_500"
             app:title="Profile"
             app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_menu"
             app:navigationIconTint="@color/white" />
 
         <ScrollView
@@ -37,59 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Budget Card -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Set Monthly Budget"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="12dp" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:hint="Monthly Budget (R)"
-                            android:layout_marginBottom="12dp">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etMonthlyBudget"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="numberDecimal" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnSetMonthlyBudg"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:text="Set Budget"
-                            android:onClick="setMonthlyBudget"
-                            app:cornerRadius="10dp"
-                            android:backgroundTint="@color/purple_500" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Balance Summary Card -->
+                <!-- ── User Info Card ── -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,124 +52,67 @@
                         android:padding="20dp"
                         android:gravity="center">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Monthly Balance"
-                            android:textSize="16sp"
-                            android:textColor="@color/white"
-                            android:alpha="0.85" />
+                        <!-- Profile picture with tap-to-change overlay -->
+                        <FrameLayout
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:layout_marginBottom="12dp">
+
+                            <ImageView
+                                android:id="@+id/ivAvatar"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
+                                android:src="@drawable/ic_avatar_placeholder"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/circle_white_bg" />
+
+                            <!-- Camera badge overlay -->
+                            <ImageView
+                                android:id="@+id/ivEditPhoto"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="bottom|end"
+                                android:src="@drawable/ic_camera"
+                                android:background="@drawable/circle_purple_bg"
+                                android:padding="4dp" />
+
+                        </FrameLayout>
 
                         <TextView
-                            android:id="@+id/tvMonthlyBalance"
+                            android:id="@+id/tvUserName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="R 0.00"
-                            android:textSize="32sp"
+                            android:text="User Name"
+                            android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="@color/white"
-                            android:layout_marginTop="6dp" />
+                            android:textColor="@color/white" />
 
                         <TextView
-                            android:id="@+id/etProfLossStatus"
+                            android:id="@+id/tvUserEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="No Transactions"
+                            android:text="user@email.com"
                             android:textSize="14sp"
                             android:textColor="@color/white"
-                            android:alpha="0.9"
-                            android:layout_marginTop="6dp" />
+                            android:alpha="0.8"
+                            android:layout_marginBottom="16dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLogout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="Log Out"
+                            android:textSize="13sp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeColor="@color/white"
+                            android:textColor="@color/white"
+                            app:cornerRadius="20dp" />
 
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Transaction Count Row -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-
-                    <!-- Income Count Card -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@color/white">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Income Count"
-                                android:textSize="13sp"
-                                android:textColor="@color/gray" />
-
-                            <TextView
-                                android:id="@+id/tvNumOfInc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="28sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/purple_500"
-                                android:layout_marginTop="4dp" />
-
-                        </LinearLayout>
-
-                    </androidx.cardview.widget.CardView>
-
-                    <!-- Expense Count Card -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@color/white">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Expense Count"
-                                android:textSize="13sp"
-                                android:textColor="@color/gray" />
-
-                            <TextView
-                                android:id="@+id/tvNumOfExp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="28sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/purple_500"
-                                android:layout_marginTop="4dp" />
-
-                        </LinearLayout>
-
-                    </androidx.cardview.widget.CardView>
-
-                </LinearLayout>
-
-                <!-- Period Filter Card -->
+                <!-- ── Gamification Card ── -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -240,77 +130,47 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View By Period"
+                            android:text="🏆 Achievements"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:layout_marginBottom="12dp" />
+                            android:layout_marginBottom="8dp" />
 
+                        <TextView
+                            android:id="@+id/tvStreak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔥 0-day login streak"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvExpenseCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📊 0 transactions logged"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="16dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Badges"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Badges rendered dynamically -->
                         <LinearLayout
+                            android:id="@+id/llBadges"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnThisWeek"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="4dp"
-                                android:text="This Week"
-                                android:textSize="9sp"
-                                app:cornerRadius="8dp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                app:strokeColor="@color/purple_500"
-                                android:textColor="@color/purple_500" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnThisMonth"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginHorizontal="4dp"
-                                android:text="This Month"
-                                android:textSize="9sp"
-                                app:cornerRadius="8dp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                app:strokeColor="@color/purple_500"
-                                android:textColor="@color/purple_500" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnLastMonth"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="4dp"
-                                android:text="Last Month"
-                                android:textSize="9sp"
-                                app:cornerRadius="8dp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                app:strokeColor="@color/purple_500"
-                                android:textColor="@color/purple_500" />
-
-                        </LinearLayout>
+                            android:orientation="vertical" />
 
                     </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Results Container -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
-
-                    <LinearLayout
-                        android:id="@+id/llResultsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -318,7 +178,6 @@
 
         </ScrollView>
 
-        <!-- Bottom Navigation View -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
@@ -331,7 +190,6 @@
 
     </LinearLayout>
 
-    <!-- ==================== NAVIGATION DRAWER ==================== -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="280dp"

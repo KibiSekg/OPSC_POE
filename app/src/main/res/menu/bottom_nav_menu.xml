@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Place this file at: res/menu/bottom_nav_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
@@ -11,6 +10,11 @@
         android:id="@+id/btnExpInc"
         android:icon="@drawable/ic_expense"
         android:title="Expenses" />
+
+    <item
+        android:id="@+id/btnAnalytics"
+        android:icon="@drawable/ic_analytics"
+        android:title="Analytics" />
 
     <item
         android:id="@+id/btnProfile"

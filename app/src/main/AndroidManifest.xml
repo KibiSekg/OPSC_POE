@@ -14,8 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OPSC_POE">
         <activity
+            android:name=".Analytics"
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity
             android:name=".Home"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".Profile"
             android:exported="false" />

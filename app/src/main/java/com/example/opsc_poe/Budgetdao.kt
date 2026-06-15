@@ -12,6 +12,6 @@ interface BudgetDao {
     fun insertBudget(budget: Budget)
 
     // Always get the most recently inserted budget
-    @Query("SELECT * FROM budget ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM budgets ORDER BY id DESC LIMIT 1")
     fun getLatestBudget(): Budget?
 }

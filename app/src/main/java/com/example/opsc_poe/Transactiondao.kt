@@ -7,14 +7,14 @@ import com.example.opsc_poe.db.entities.Transaction
 
 @Dao
 interface TransactionDao {
-
     @Insert
     fun insertTransaction(transaction: Transaction)
 
-    @Query("SELECT * FROM transactions")
+    @Query("SELECT * FROM transactions ORDER BY date DESC")
     fun getAllTransactions(): List<Transaction>
 
-    // Filter by date range — used for This Week / This Month / Last Month
-    @Query("SELECT * FROM transactions WHERE date >= :startDate AND date <= :endDate")
+    @Query("SELECT * FROM transactions WHERE title = :title ORDER BY date DESC LIMIT 1")
+    fun getLastTransactionByTitle(title: String): Transaction?
+    @Query("SELECT * FROM transactions WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getTransactionsByDateRange(startDate: String, endDate: String): List<Transaction>
 }

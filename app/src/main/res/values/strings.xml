@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OPSC_POE</string>
+    <string name="app_name">SpendSmart</string>
     <string name="textEmail">Email:</string>
     <string name="textName">Name:</string>
     <string name="textPassword">Password:</string>

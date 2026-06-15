@@ -13,23 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#F5F5F5">
+        android:background="#EEEEDD">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/purple_500"
+            android:background="#15174D"
             app:title="Add Transaction"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="#F4F1EC"
             app:navigationIcon="@drawable/ic_menu"
-            app:navigationIconTint="@color/white" />
+            app:navigationIconTint="#F4F1EC" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,8 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="#F4F1EC">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -52,73 +53,88 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="New Transaction"
-                            android:textSize="20sp"
+                            android:text="💰 New Transaction"
+                            android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="#15174D"
                             android:layout_marginBottom="4dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Fields marked with * are required"
-                            android:textSize="12sp"
-                            android:textColor="@color/gray"
-                            android:layout_marginBottom="20dp" />
+                            android:textSize="13sp"
+                            android:textColor="#216999"
+                            android:layout_marginBottom="24dp" />
 
-                        <!-- Amount * -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:hint="Transaction Name / Title *"
+                            android:layout_marginBottom="16dp"
+                            app:boxStrokeColor="#216999"
+                            app:hintTextColor="#216999">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTransactionTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords"
+                                android:textColor="#020035" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:hint="Amount (R) *"
-                            android:layout_marginBottom="12dp">
-
+                            android:layout_marginBottom="16dp"
+                            app:boxStrokeColor="#216999"
+                            app:hintTextColor="#216999">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etAmnt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="numberDecimal" />
-
+                                android:inputType="numberDecimal"
+                                android:textColor="#020035" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Transaction Type * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:hint="Transaction Type *"
-                            android:layout_marginBottom="12dp">
-
+                            android:layout_marginBottom="16dp"
+                            app:boxStrokeColor="#216999"
+                            app:hintTextColor="#216999">
                             <AutoCompleteTextView
                                 android:id="@+id/spinnerTransType"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:focusable="false"
                                 android:cursorVisible="false"
-                                android:inputType="none" />
-
+                                android:inputType="none"
+                                android:textColor="#020035" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Category * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:hint="Category *"
-                            android:layout_marginBottom="4dp">
-
+                            android:layout_marginBottom="8dp"
+                            app:boxStrokeColor="#216999"
+                            app:hintTextColor="#216999">
                             <AutoCompleteTextView
                                 android:id="@+id/spinnerCategory"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:focusable="false"
                                 android:cursorVisible="false"
-                                android:inputType="none" />
-
+                                android:inputType="none"
+                                android:textColor="#020035" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Add custom category -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAddCategory"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -126,20 +142,21 @@
                             android:layout_height="wrap_content"
                             android:text="+ Add Custom Category"
                             android:textSize="12sp"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="16dp"
                             app:cornerRadius="8dp"
-                            app:strokeColor="@color/purple_500"
-                            android:textColor="@color/purple_500" />
+                            android:backgroundTint="#F4F1EC"
+                            android:textColor="#ED4B00"
+                            app:strokeColor="#ED4B00"
+                            app:strokeWidth="1dp" />
 
-                        <!-- Date * -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            app:endIconMode="custom"
-                            app:endIconDrawable="@drawable/ic_calendar"
-                            android:layout_marginBottom="20dp">
-
+                            android:layout_marginBottom="16dp"
+                            app:boxStrokeColor="#216999"
+                            app:hintTextColor="#216999"
+                            app:endIconMode="custom">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etTransactionDate"
                                 android:layout_width="match_parent"
@@ -147,121 +164,156 @@
                                 android:focusable="false"
                                 android:cursorVisible="false"
                                 android:inputType="none"
-                                android:hint="Tap to select date*"
-                                android:onClick="showDatePickerFromXml" />
-
+                                android:hint="Tap to select date"
+                                android:textColor="#020035" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- ── Photo Section ── -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Attach Photo (Optional)"
-                            android:textSize="14sp"
+                            android:text="How do you feel about this expense?"
+                            android:textSize="15sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="#15174D"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="8dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_marginBottom="24dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnThumbsUp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="👍 Satisfied"
+                                android:textSize="13sp"
+                                app:strokeColor="#216999"
+                                android:textColor="#216999"
+                                app:cornerRadius="12dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnThumbsDown"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="👎 Unsatisfied"
+                                android:textSize="13sp"
+                                app:strokeColor="#216999"
+                                android:textColor="#216999"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📷 Attach Photo (Optional)"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="#15174D"
                             android:layout_marginBottom="10dp" />
 
-                        <!-- Photo preview (hidden until photo selected) -->
                         <FrameLayout
                             android:id="@+id/flPhotoPreview"
                             android:layout_width="match_parent"
                             android:layout_height="180dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/rounded_outline_bg"
                             android:visibility="gone">
-
                             <ImageView
                                 android:id="@+id/ivExpensePhoto"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop" />
-
                             <ImageView
                                 android:id="@+id/ivRemovePhoto"
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:layout_gravity="top|end"
                                 android:layout_margin="8dp"
-                                android:src="@drawable/ic_close"
-                                android:background="@drawable/circle_red_bg"
+                                android:src="@android:drawable/ic_menu_close_clear_cancel"
                                 android:padding="6dp" />
-
                         </FrameLayout>
 
-                        <!-- Photo action buttons -->
                         <LinearLayout
                             android:id="@+id/llPhotoButtons"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginBottom="20dp">
+                            android:layout_marginBottom="24dp">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTakePhoto"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="44dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
                                 android:layout_marginEnd="8dp"
                                 android:text="📷 Camera"
                                 android:textSize="13sp"
-                                app:cornerRadius="10dp"
-                                app:strokeColor="@color/purple_500"
-                                android:textColor="@color/purple_500" />
+                                app:cornerRadius="24dp"
+                                app:strokeColor="#216999"
+                                android:textColor="#216999" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnPickPhoto"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="44dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
                                 android:text="🖼️ Gallery"
                                 android:textSize="13sp"
-                                app:cornerRadius="10dp"
-                                app:strokeColor="@color/purple_500"
-                                android:textColor="@color/purple_500" />
+                                app:cornerRadius="24dp"
+                                app:strokeColor="#216999"
+                                android:textColor="#216999" />
 
                         </LinearLayout>
 
-                        <!-- Save Button -->
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSaveTransaction"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
+                            android:layout_height="56dp"
                             android:text="Save Transaction"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:onClick="saveTransaction"
-                            app:cornerRadius="10dp"
-                            android:backgroundTint="@color/purple_500" />
+                            app:cornerRadius="28dp"
+                            android:backgroundTint="#ED4B00"
+                            android:textColor="#F4F1EC"
+                            android:stateListAnimator="@null" />
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-
         </ScrollView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="#F4F1EC"
             app:menu="@menu/bottom_nav_menu"
             app:itemIconTint="@color/bottom_nav_color"
             app:itemTextColor="@color/bottom_nav_color"
-            app:labelVisibilityMode="labeled" />
+            app:elevation="8dp" />
 
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="280dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        app:itemIconTint="@color/purple_500"
-        app:itemTextColor="@color/black" />
+        app:itemIconTint="#15174D"
+        app:itemTextColor="#15174D" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

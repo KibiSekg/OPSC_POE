@@ -13,23 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#F5F5F5">
+        android:background="#EEEEDD">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/purple_500"
+            android:background="#15174D"
             app:title="Profile"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="#F4F1EC"
             app:navigationIcon="@drawable/ic_menu"
-            app:navigationIconTint="@color/white" />
+            app:navigationIconTint="#F4F1EC" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,8 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/purple_500">
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="#15174D">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -52,28 +53,34 @@
                         android:padding="20dp"
                         android:gravity="center">
 
-                        <!-- Profile picture with tap-to-change overlay -->
+                        <!-- Avatar with tap-to-change camera overlay -->
                         <FrameLayout
                             android:layout_width="90dp"
                             android:layout_height="90dp"
                             android:layout_marginBottom="12dp">
 
-                            <ImageView
-                                android:id="@+id/ivAvatar"
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="90dp"
                                 android:layout_height="90dp"
-                                android:src="@drawable/ic_avatar_placeholder"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/circle_white_bg" />
+                                app:cardCornerRadius="45dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#ED4B00">
+                                <ImageView
+                                    android:id="@+id/ivAvatar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/ic_avatar_placeholder"
+                                    android:scaleType="centerCrop" />
+                            </androidx.cardview.widget.CardView>
 
-                            <!-- Camera badge overlay -->
+                            <!-- Camera badge -->
                             <ImageView
                                 android:id="@+id/ivEditPhoto"
                                 android:layout_width="28dp"
                                 android:layout_height="28dp"
                                 android:layout_gravity="bottom|end"
                                 android:src="@drawable/ic_camera"
-                                android:background="@drawable/circle_purple_bg"
+                                android:background="@drawable/circle_orange_bg"
                                 android:padding="4dp" />
 
                         </FrameLayout>
@@ -85,7 +92,7 @@
                             android:text="User Name"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="@color/white" />
+                            android:textColor="#F4F1EC" />
 
                         <TextView
                             android:id="@+id/tvUserEmail"
@@ -93,8 +100,7 @@
                             android:layout_height="wrap_content"
                             android:text="user@email.com"
                             android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:alpha="0.8"
+                            android:textColor="#BCC8CC"
                             android:layout_marginBottom="16dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -104,22 +110,21 @@
                             android:text="Log Out"
                             android:textSize="13sp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            app:strokeColor="@color/white"
-                            android:textColor="@color/white"
+                            app:strokeColor="#ED4B00"
+                            android:textColor="#ED4B00"
                             app:cornerRadius="20dp" />
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
                 <!-- ── Gamification Card ── -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="80dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="#F4F1EC">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -133,37 +138,95 @@
                             android:text="🏆 Achievements"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="8dp" />
+                            android:textColor="#15174D"
+                            android:layout_marginBottom="12dp" />
 
-                        <TextView
-                            android:id="@+id/tvStreak"
-                            android:layout_width="wrap_content"
+                        <!-- Streak & count info row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="🔥 0-day login streak"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="4dp" />
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="16dp">
 
-                        <TextView
-                            android:id="@+id/tvExpenseCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📊 0 transactions logged"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="16dp" />
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="2dp"
+                                app:cardBackgroundColor="#15174D">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="12dp"
+                                    android:gravity="center">
+                                    <TextView android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="🔥" android:textSize="24sp" />
+                                    <TextView
+                                        android:id="@+id/tvStreak"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0"
+                                        android:textSize="28sp"
+                                        android:textStyle="bold"
+                                        android:textColor="#ED4B00" />
+                                    <TextView android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Day Streak"
+                                        android:textSize="11sp"
+                                        android:textColor="#BCC8CC" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
 
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="8dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="2dp"
+                                app:cardBackgroundColor="#15174D">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="12dp"
+                                    android:gravity="center">
+                                    <TextView android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="📊" android:textSize="24sp" />
+                                    <TextView
+                                        android:id="@+id/tvExpenseCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0"
+                                        android:textSize="28sp"
+                                        android:textStyle="bold"
+                                        android:textColor="#ED4B00" />
+                                    <TextView android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Transactions"
+                                        android:textSize="11sp"
+                                        android:textColor="#BCC8CC" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                        </LinearLayout>
+
+                        <!-- Badges section -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Badges"
                             android:textSize="15sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="8dp" />
+                            android:textColor="#15174D"
+                            android:layout_marginBottom="10dp" />
 
-                        <!-- Badges rendered dynamically -->
+                        <!-- Badges rendered dynamically in code -->
                         <LinearLayout
                             android:id="@+id/llBadges"
                             android:layout_width="match_parent"
@@ -171,33 +234,31 @@
                             android:orientation="vertical" />
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-
         </ScrollView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="#F4F1EC"
             app:menu="@menu/bottom_nav_menu"
             app:itemIconTint="@color/bottom_nav_color"
             app:itemTextColor="@color/bottom_nav_color"
-            app:labelVisibilityMode="labeled" />
+            app:elevation="8dp" />
 
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="280dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        app:itemIconTint="@color/purple_500"
-        app:itemTextColor="@color/black" />
+        app:itemIconTint="#15174D"
+        app:itemTextColor="#15174D" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

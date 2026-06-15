@@ -1,68 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/fragment_transaction_detail_bottom_sheet.xml -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@color/white">
+    android:background="#F4F1EC">
 
+    <!-- Drag handle -->
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/gray"
+        android:background="#BCC8CC"
         android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:id="@+id/bsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transaction Details"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="16dp" />
-
+    <!-- Type badge (Income/Expense) -->
     <TextView
         android:id="@+id/bsType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:textAllCaps="true"
+        android:background="@drawable/ic_expense"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Amount -->
     <TextView
         android:id="@+id/bsAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="36sp"
         android:textStyle="bold"
-        android:textColor="@color/purple_500"
-        android:layout_marginBottom="12dp"/>
+        android:textColor="#15174D"
+        android:layout_marginBottom="8dp" />
 
+    <!-- Category -->
     <TextView
         android:id="@+id/bsCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="8dp"/>
+        android:textColor="#216999"
+        android:layout_marginBottom="4dp" />
 
+    <!-- Date -->
     <TextView
         android:id="@+id/bsDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@color/gray"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="#BCC8CC"
+        android:layout_marginBottom="20dp" />
 
+    <!-- Photo (visible only if the transaction has one) -->
     <ImageView
         android:id="@+id/bsImage"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        android:background="#EEEEEE"/>
+        android:background="#DDDDCC"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/bsNoPhotoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No photo attached"
+        android:textSize="13sp"
+        android:textColor="#BCC8CC"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp" />
+
 </LinearLayout>

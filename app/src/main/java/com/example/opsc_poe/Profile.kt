@@ -120,7 +120,7 @@ class Profile : AppCompatActivity() {
             val totalDbCount = AppDatabase.getDatabase(this).transactionDao().getAllTransactions().size
             val savedCount = GamificationManager.getExpenseCount(this)
 
-            // Backup alignment alignment safety code if counts drift apart
+            // Backup alignment safety code if counts drift apart
             if (totalDbCount > savedCount) {
                 val diff = totalDbCount - savedCount
                 val prefs = getSharedPreferences("spend_smart_gamification", Context.MODE_PRIVATE)

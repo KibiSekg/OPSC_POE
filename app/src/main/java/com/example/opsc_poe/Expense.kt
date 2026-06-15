@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.DatePickerDialog
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -98,6 +99,16 @@ class Expense : AppCompatActivity() {
     ) { granted ->
         if (granted) launchCamera()
         else Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+    }
+
+    private val galleryPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            executeGalleryIntent()
+        } else {
+            Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // ── Lifecycle ─────────────────────────────────────────────────
@@ -237,7 +248,7 @@ class Expense : AppCompatActivity() {
         }
 
         btnPickPhoto.setOnClickListener {
-            galleryLauncher.launch("image/*")
+            checkGalleryPermissionAndOpen()
         }
 
         ivRemovePhoto.setOnClickListener {
@@ -246,18 +257,47 @@ class Expense : AppCompatActivity() {
         }
     }
 
+    private fun checkGalleryPermissionAndOpen() {
+        val permissionNeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permissionNeeded) == PackageManager.PERMISSION_GRANTED) {
+            executeGalleryIntent()
+        } else {
+            galleryPermissionLauncher.launch(permissionNeeded)
+        }
+    }
+
+    private fun executeGalleryIntent() {
+        galleryLauncher.launch("image/*")
+    }
+
     private fun launchCamera() {
-        val photoFile = File.createTempFile(
-            "expense_${System.currentTimeMillis()}",
-            ".jpg",
-            getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        )
-        cameraPhotoUri = FileProvider.getUriForFile(
-            this,
-            "${packageName}.provider",
-            photoFile
-        )
-        cameraLauncher.launch(cameraPhotoUri)
+        try {
+            val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            if (storageDir != null && !storageDir.exists()) {
+                storageDir.mkdirs()
+            }
+
+            val photoFile = File.createTempFile(
+                "expense_${System.currentTimeMillis()}",
+                ".jpg",
+                storageDir
+            )
+
+            cameraPhotoUri = FileProvider.getUriForFile(
+                this,
+                "${packageName}.provider",
+                photoFile
+            )
+            cameraLauncher.launch(cameraPhotoUri)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Failed to initialize camera cache destination.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showPhotoPreview(uri: Uri) {
@@ -280,7 +320,7 @@ class Expense : AppCompatActivity() {
     private fun selectRating(rating: String) {
         currentRating = rating
 
-        btnThumbsUp.backgroundTintList   =
+        btnThumbsUp.backgroundTintList =
             if (rating == "THUMBS_UP") android.content.res.ColorStateList.valueOf(colorGreen) else null
         btnThumbsDown.backgroundTintList =
             if (rating == "THUMBS_DOWN") android.content.res.ColorStateList.valueOf(colorRed) else null

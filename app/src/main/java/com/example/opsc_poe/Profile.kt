@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -42,6 +44,8 @@ class Profile : AppCompatActivity() {
     // Camera / gallery
     private var photoUri: Uri? = null
 
+    // ── Activity Result Launchers ─────────────────────────────────
+
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
@@ -57,8 +61,20 @@ class Profile : AppCompatActivity() {
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) launchCamera() else showGallery()
+        if (granted) launchCamera() else checkGalleryPermissionAndOpen()
     }
+
+    private val galleryPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            executeGalleryIntent()
+        } else {
+            Toast.makeText(this, "Gallery permission is required to select photos.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // ── Lifecycle ─────────────────────────────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +106,10 @@ class Profile : AppCompatActivity() {
         val savedPath = getSharedPreferences("user_prefs", MODE_PRIVATE)
             .getString("profile_pic_path", null)
         if (!savedPath.isNullOrEmpty()) {
-            Glide.with(this).load(File(savedPath)).circleCrop().into(ivAvatar)
+            val file = File(savedPath)
+            if (file.exists()) {
+                Glide.with(this).load(file).circleCrop().into(ivAvatar)
+            }
         }
 
         // Photo picker listeners
@@ -107,20 +126,16 @@ class Profile : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // FIX: Always reload gamification metrics here to guarantee instantaneous structural data updates
         refreshGamificationMetrics()
     }
 
     private fun refreshGamificationMetrics() {
         tvStreak.text = "🔥 ${GamificationManager.getStreak(this)}-day login streak"
 
-        // Sync total counts against database room storage values directly
         thread {
-            // Replace .getAllTransactions() with your actual list/count data function if named differently
             val totalDbCount = AppDatabase.getDatabase(this).transactionDao().getAllTransactions().size
             val savedCount = GamificationManager.getExpenseCount(this)
 
-            // Backup alignment safety code if counts drift apart
             if (totalDbCount > savedCount) {
                 val diff = totalDbCount - savedCount
                 val prefs = getSharedPreferences("spend_smart_gamification", Context.MODE_PRIVATE)
@@ -153,37 +168,65 @@ class Profile : AppCompatActivity() {
                             cameraPermission.launch(Manifest.permission.CAMERA)
                         }
                     }
-                    1 -> showGallery()
+                    1 -> checkGalleryPermissionAndOpen()
                 }
             }
             .show()
     }
 
-    private fun launchCamera() {
-        val file = createImageFile()
-        photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", file)
-        photoUri?.let { safeUri -> cameraLauncher.launch(safeUri) }
+    private fun checkGalleryPermissionAndOpen() {
+        // Evaluate dynamic SDK string to safely circumvent media permission rule updates
+        val permissionNeeded = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permissionNeeded) == PackageManager.PERMISSION_GRANTED) {
+            executeGalleryIntent()
+        } else {
+            galleryPermissionLauncher.launch(permissionNeeded)
+        }
     }
 
-    private fun showGallery() {
+    private fun executeGalleryIntent() {
         galleryLauncher.launch("image/*")
+    }
+
+    private fun launchCamera() {
+        try {
+            val file = createImageFile()
+            photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", file)
+            photoUri?.let { safeUri -> cameraLauncher.launch(safeUri) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Failed to initialize camera cache destination.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun createImageFile(): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs()
+        }
         return File.createTempFile("PROFILE_${timestamp}_", ".jpg", storageDir)
     }
 
     private fun saveAndShowAvatar(uri: Uri) {
-        val dest = File(filesDir, "profile_picture.jpg")
-        contentResolver.openInputStream(uri)?.use { input ->
-            dest.outputStream().use { output -> input.copyTo(output) }
+        try {
+            val dest = File(filesDir, "profile_picture.jpg")
+            contentResolver.openInputStream(uri)?.use { input ->
+                dest.outputStream().use { output -> input.copyTo(output) }
+            }
+            getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
+                .putString("profile_pic_path", dest.absolutePath)
+                .apply()
+            Glide.with(this).load(dest).circleCrop().into(ivAvatar)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Failed to save profile picture.", Toast.LENGTH_SHORT).show()
         }
-        getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
-            .putString("profile_pic_path", dest.absolutePath)
-            .apply()
-        Glide.with(this).load(dest).circleCrop().into(ivAvatar)
     }
 
     // ── Badges ────────────────────────────────────────────────────

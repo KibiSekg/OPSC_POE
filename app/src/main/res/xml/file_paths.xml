@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path
+        name="expense_images"
+        path="Android/data/com.example.opsc_poe/files/Pictures" />
+
+    <external-path
+        name="external_files"
+        path="." />
+</paths>

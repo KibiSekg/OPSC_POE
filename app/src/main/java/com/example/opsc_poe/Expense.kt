@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -36,6 +37,10 @@ import kotlin.concurrent.thread
 
 class Expense : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "ExpenseActivity"
+    }
+
     // Form fields
     private lateinit var etTitle:          TextInputEditText
     private lateinit var etAmnt:           TextInputEditText
@@ -62,7 +67,7 @@ class Expense : AppCompatActivity() {
     private lateinit var ivExpensePhoto: ImageView
     private lateinit var ivRemovePhoto:  ImageView
 
-    // State
+    // State management variables
     private var selectedPhotoUri: Uri? = null
     private lateinit var cameraPhotoUri: Uri
     private var currentRating = "NONE"   // "THUMBS_UP" | "THUMBS_DOWN" | "NONE"
@@ -80,8 +85,11 @@ class Expense : AppCompatActivity() {
         ActivityResultContracts.TakePicture()
     ) { success ->
         if (success && ::cameraPhotoUri.isInitialized) {
+            Log.d(TAG, "cameraLauncher: Image captured successfully. URI: $cameraPhotoUri")
             selectedPhotoUri = cameraPhotoUri
             showPhotoPreview(selectedPhotoUri!!)
+        } else {
+            Log.e(TAG, "cameraLauncher: Camera capture failed or photo URI not properly initialized.")
         }
     }
 
@@ -89,24 +97,34 @@ class Expense : AppCompatActivity() {
         ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri != null) {
+            Log.d(TAG, "galleryLauncher: Selected image URI picked from storage: $uri")
             selectedPhotoUri = uri
             showPhotoPreview(uri)
+        } else {
+            Log.d(TAG, "galleryLauncher: User cancelled picking an image from storage.")
         }
     }
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) launchCamera()
-        else Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+        if (granted) {
+            Log.d(TAG, "cameraPermissionLauncher: Camera access GRANTED by user.")
+            launchCamera()
+        } else {
+            Log.e(TAG, "cameraPermissionLauncher: Camera access DENIED by user.")
+            Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private val galleryPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
+            Log.d(TAG, "galleryPermissionLauncher: Storage access GRANTED by user.")
             executeGalleryIntent()
         } else {
+            Log.e(TAG, "galleryPermissionLauncher: Storage access DENIED by user.")
             Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show()
         }
     }
@@ -115,6 +133,7 @@ class Expense : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: Initializing Expense activity forms")
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
         setupNavigation(this, R.id.btnExpInc)
@@ -183,16 +202,22 @@ class Expense : AppCompatActivity() {
         spinnerCategory.inputType = 0   // dropdown only
 
         btnAddCategory.setOnClickListener {
+            Log.d(TAG, "btnAddCategory clicked: Displaying sheet dialog to append custom types")
             AddCategoryBottomSheet { newName ->
                 if (!categories.contains(newName)) {
+                    Log.d(TAG, "New custom category provided: '$newName'. Adding to current adapter cache.")
                     categories.add(newName)
                     categoryAdapter.notifyDataSetChanged()
+
                     // Persist to Room so it survives restarts
                     thread {
+                        Log.d(TAG, "Saving '$newName' custom entry into SQLite Database context.")
                         AppDatabase.getDatabase(this)
                             .categoryDao()
                             .insertCategory(Category(name = newName))
                     }
+                } else {
+                    Log.d(TAG, "Custom category fallback triggered: '$newName' already exists in list.")
                 }
                 spinnerCategory.setText(newName, false)
             }.show(supportFragmentManager, "AddCategorySheet")
@@ -201,13 +226,17 @@ class Expense : AppCompatActivity() {
 
     private fun loadCustomCategoriesFromDb() {
         thread {
+            Log.d(TAG, "loadCustomCategoriesFromDb: Pulling extended tables info from DB asynchronously.")
             val dbCats = AppDatabase.getDatabase(this).categoryDao().getAllCategories()
             runOnUiThread {
+                var addedCount = 0
                 dbCats.forEach { cat ->
                     if (!categories.contains(cat.name)) {
                         categories.add(cat.name)
+                        addedCount++
                     }
                 }
+                Log.d(TAG, "Successfully injected $addedCount custom external rows into dropdown array adapter.")
                 categoryAdapter.notifyDataSetChanged()
             }
         }
@@ -226,7 +255,9 @@ class Expense : AppCompatActivity() {
         DatePickerDialog(
             this,
             { _, year, month, day ->
-                etDate.setText("%04d-%02d-%02d".format(year, month + 1, day))
+                val formattedDate = "%04d-%02d-%02d".format(year, month + 1, day)
+                Log.d(TAG, "Date picked from native UI prompt: $formattedDate")
+                etDate.setText(formattedDate)
             },
             cal.get(Calendar.YEAR),
             cal.get(Calendar.MONTH),
@@ -238,20 +269,24 @@ class Expense : AppCompatActivity() {
 
     private fun setupPhotoButtons() {
         btnTakePhoto.setOnClickListener {
+            Log.d(TAG, "btnTakePhoto clicked. Evaluating hardware camera access profiles.")
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 launchCamera()
             } else {
+                Log.d(TAG, "Camera authorization required. Initializing runtime prompt handshake.")
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
 
         btnPickPhoto.setOnClickListener {
+            Log.d(TAG, "btnPickPhoto clicked. Evaluating storage read permission profiles.")
             checkGalleryPermissionAndOpen()
         }
 
         ivRemovePhoto.setOnClickListener {
+            Log.d(TAG, "ivRemovePhoto clicked: Discarding active attachment URI pointer selection.")
             selectedPhotoUri = null
             flPhotoPreview.visibility = View.GONE
         }
@@ -267,11 +302,13 @@ class Expense : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, permissionNeeded) == PackageManager.PERMISSION_GRANTED) {
             executeGalleryIntent()
         } else {
+            Log.d(TAG, "Storage authorization required ($permissionNeeded). Launching execution interceptor.")
             galleryPermissionLauncher.launch(permissionNeeded)
         }
     }
 
     private fun executeGalleryIntent() {
+        Log.d(TAG, "Launching system image picker pipeline intent filter.")
         galleryLauncher.launch("image/*")
     }
 
@@ -293,9 +330,10 @@ class Expense : AppCompatActivity() {
                 "${packageName}.provider",
                 photoFile
             )
+            Log.d(TAG, "Temporary camera target file created: ${photoFile.absolutePath}")
             cameraLauncher.launch(cameraPhotoUri)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Critical error building cache storage file descriptors for native camera application allocation layer", e)
             Toast.makeText(this, "Failed to initialize camera cache destination.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -318,6 +356,7 @@ class Expense : AppCompatActivity() {
     }
 
     private fun selectRating(rating: String) {
+        Log.d(TAG, "Satisfaction flag tracking selection changed: '$rating'")
         currentRating = rating
 
         btnThumbsUp.backgroundTintList =
@@ -338,6 +377,9 @@ class Expense : AppCompatActivity() {
         val category = spinnerCategory.text.toString().trim()
         val date     = etDate.text.toString().trim()
 
+        Log.d(TAG, "saveTransaction workflow initialized. Evaluating entry values validations.")
+
+        // Reset text field wrappers
         tilTitle.error    = null
         tilAmount.error   = null
         tilType.error     = null
@@ -370,24 +412,33 @@ class Expense : AppCompatActivity() {
             hasError = true
         }
 
-        if (hasError) return
+        if (hasError) {
+            Log.e(TAG, "Validation failed: Transaction creation aborted due to missing or invalid fields.")
+            return
+        }
 
         thread {
+            Log.d(TAG, "Querying Room DB for historical metrics linked to title: '$title'")
             val last = AppDatabase.getDatabase(this)
                 .transactionDao()
                 .getLastTransactionByTitle(title)
 
             runOnUiThread {
+                // Intercept execution loop if user previously flagged an item as unsatisfactory
                 if (last != null && last.rating == "THUMBS_DOWN") {
+                    Log.d(TAG, "Matching negative confirmation loop found for name: '$title'. Intercepting with Alert verification.")
                     AlertDialog.Builder(this)
                         .setTitle("⚠️ Previous Dislike")
                         .setMessage(
                             "Last time you added \"$title\" you marked it as 👎 Unsatisfied.\n\nDo you still want to add it?"
                         )
                         .setPositiveButton("Yes, add it") { _, _ ->
+                            Log.d(TAG, "User bypassed alert dialog constraints manually.")
                             persistTransaction(title, amount, type, category, date)
                         }
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton("Cancel") { _, _ ->
+                            Log.d(TAG, "Transaction creation canceled by user after warning dialogue.")
+                        }
                         .show()
                 } else {
                     persistTransaction(title, amount, type, category, date)
@@ -396,6 +447,10 @@ class Expense : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles local image cloning execution into protected internal files storage slots,
+     * builds data transfer tokens, and saves records into SQLite.
+     */
     private fun persistTransaction(
         title: String, amount: String, type: String, category: String, date: String
     ) {
@@ -403,6 +458,7 @@ class Expense : AppCompatActivity() {
 
         selectedPhotoUri?.let { uri ->
             try {
+                Log.d(TAG, "Active image attachment located. Exporting content wrapper data stream to app storage workspace.")
                 val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 val targetFile = File(filesDir, "RECEIPT_${timestamp}.jpg")
 
@@ -410,8 +466,9 @@ class Expense : AppCompatActivity() {
                     targetFile.outputStream().use { output -> input.copyTo(output) }
                 }
                 finalSavedPath = targetFile.absolutePath
+                Log.d(TAG, "Receipt local storage copy successfully processed: $finalSavedPath")
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "IOException caught trying to replicate targeted metadata attachment data streams", e)
             }
         }
 
@@ -426,12 +483,16 @@ class Expense : AppCompatActivity() {
         )
 
         thread {
+            Log.d(TAG, "Writing entry structures directly to app database layer logs.")
             AppDatabase.getDatabase(this).transactionDao().insertTransaction(tx)
+
+            Log.d(TAG, "Invoking Gamification evaluation routines based on user updates.")
             val newBadges = GamificationManager.recordExpense(this)
 
             runOnUiThread {
                 Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
                 newBadges.forEach { badge ->
+                    Log.d(TAG, "Gamification Alert -> New award unlocked: ${badge.title}")
                     Toast.makeText(
                         this, "${badge.emoji} Badge unlocked: ${badge.title}!", Toast.LENGTH_LONG
                     ).show()
@@ -441,7 +502,11 @@ class Expense : AppCompatActivity() {
         }
     }
 
+    /**
+     * Flushes active string modifications and returns form inputs and rating selections back to initial defaults.
+     */
     private fun clearForm() {
+        Log.d(TAG, "Flushing form changes. Re-indexing inputs to default empty states.")
         etTitle.text?.clear()
         etAmnt.text?.clear()
         etDate.text?.clear()
@@ -454,6 +519,7 @@ class Expense : AppCompatActivity() {
         btnThumbsUp.setTextColor(colorBlue)
         btnThumbsDown.backgroundTintList = null
         btnThumbsDown.setTextColor(colorBlue)
+
         tilTitle.error    = null
         tilAmount.error   = null
         tilType.error     = null

@@ -13,12 +13,12 @@ Spend Smart transforms financial management into an engaging experience by combi
 
 ### Key Features
 
-- ** Transaction Management** - Log income and expenses with titles, amounts, categories, and dates
-- ** Receipt Capture** - Take photos or pick from gallery to attach receipts to transactions
-- ** Satisfaction Rating** - Rate transactions as thumbs up/down for spending reflection
-- ** Monthly Budget Tracking** - Set spending limits with visual progress indicators
-- ** Advanced Analytics** - View income vs expense graphs, category breakdown pie charts, and transaction history
-- ** Gamification System** - Earn badges for transaction milestones and login streaks
+- **Transaction Management** - Log income and expenses with titles, amounts, categories, and dates
+- **Receipt Capture** - Take photos or pick from gallery to attach receipts to transactions
+- **Satisfaction Rating** - Rate transactions as thumbs up/down for spending reflection
+- **Monthly Budget Tracking** - Set spending limits with visual progress indicators
+- **Advanced Analytics** - View income vs expense graphs, category breakdown pie charts, and transaction history
+- **Gamification System** - Earn badges for transaction milestones and login streaks
   - First Transaction (🥇)
   - 5 Transactions (⭐)
   - 10 Transactions (🔥)
@@ -26,11 +26,11 @@ Spend Smart transforms financial management into an engaging experience by combi
   - 50 Transactions (🏆)
   - 3-Day Streak (📅)
   - 7-Day Streak (🗓️)
-- ** Period Filtering** - Analyze finances by week, month, or previous month
-- ** Profile Management** - Custom avatar photos and user session persistence
-- ** Secure Authentication** - User registration and login with validation
-- ** Custom Categories** - Create personalized expense categories
-- ** Local Database** - All data stored securely on device using Room database
+- **Period Filtering** - Analyze finances by week, month, or previous month
+- **Profile Management** - Custom avatar photos and user session persistence
+- **Secure Authentication** - User registration and login with validation
+- **Custom Categories** - Create personalized expense categories
+- **Local Database** - All data stored securely on device using Room database
 
 ##  Who Is It For?
 

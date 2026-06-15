@@ -175,7 +175,7 @@ class Profile : AppCompatActivity() {
      * against stored key values inside local SharedPreferences.
      */
     private fun refreshGamificationMetrics() {
-        tvStreak.text = "🔥 ${GamificationManager.getStreak(this)}-day login streak"
+        tvStreak.text = "${GamificationManager.getStreak(this)}-day"
 
         thread {
             Log.d(TAG, "refreshGamificationMetrics: Validating tracking statistics asynchronously against DB counts.")
@@ -196,7 +196,7 @@ class Profile : AppCompatActivity() {
             }
 
             runOnUiThread {
-                tvExpenseCount.text = "📊 $totalDbCount transactions logged"
+                tvExpenseCount.text = "$totalDbCount transactions"
                 renderBadges()
             }
         }

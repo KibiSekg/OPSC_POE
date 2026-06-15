@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log // Imported Android Log utility
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -18,7 +19,16 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.concurrent.thread
 
+/**
+ * Activity managing the user registration wizard profile pipeline.
+ * Provides real-time field evaluation feedback, dynamic password entropy analytics calculation wrappers,
+ * and duplicate account checks prior to persisting structured SQLite records.
+ */
 class Register : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "RegisterActivity"
+    }
 
     private lateinit var etName:             TextInputEditText
     private lateinit var etEmail:            TextInputEditText
@@ -35,6 +45,7 @@ class Register : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: Launching User Registration view layout components.")
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
 
@@ -60,7 +71,11 @@ class Register : AppCompatActivity() {
 
         // Live password strength feedback as user types
         etPassword.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = updatePasswordStrength(s.toString())
+            override fun afterTextChanged(s: Editable?) {
+                val inputStr = s.toString()
+                Log.v(TAG, "etPassword structural update callback caught. Processing length: ${inputStr.length}")
+                updatePasswordStrength(inputStr)
+            }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -68,6 +83,10 @@ class Register : AppCompatActivity() {
 
     // ── Password strength ─────────────────────────────────────────
 
+    /**
+     * Determines the visual layout properties representing password security characteristics.
+     * Maps entropy values to human-readable strings and structural progress bar tint changes.
+     */
     private fun updatePasswordStrength(pw: String) {
         val score = calcPasswordScore(pw)
         passwordStrengthBar.progress = score
@@ -79,12 +98,15 @@ class Register : AppCompatActivity() {
             score < 85   -> "Good"  to 0xFF8BC34A.toInt()
             else         -> "Strong" to 0xFF4CAF50.toInt()
         }
+
         tvPasswordStrength.text = "Password strength: $label"
         tvPasswordStrength.setTextColor(color)
-        passwordStrengthBar.progressTintList =
-            android.content.res.ColorStateList.valueOf(color)
+        passwordStrengthBar.progressTintList = android.content.res.ColorStateList.valueOf(color)
     }
 
+    /**
+     * Computes a linear integer metric score grading alphanumeric password complexity parameters.
+     */
     private fun calcPasswordScore(pw: String): Int {
         var score = 0
         if (pw.length >= 8)               score += 25
@@ -92,7 +114,10 @@ class Register : AppCompatActivity() {
         if (pw.any { it.isUpperCase() })  score += 25
         if (pw.any { it.isDigit() })      score += 20
         if (pw.any { !it.isLetterOrDigit() }) score += 20
-        return score.coerceIn(0, 100)
+
+        val finalizedValue = score.coerceIn(0, 100)
+        Log.v(TAG, "calcPasswordScore: Evaluated entropy score payload mapping: $finalizedValue/100")
+        return finalizedValue
     }
 
     // ── Validation ────────────────────────────────────────────────
@@ -114,11 +139,17 @@ class Register : AppCompatActivity() {
 
     // ── Register button ───────────────────────────────────────────
 
+    /**
+     * Parses account components, validates strings against policy criteria,
+     * launches an asynchronous background thread to inspect collision sets, and logs errors.
+     */
     fun registerUser(view: View) {
         val name     = etName.text.toString().trim()
         val email    = etEmail.text.toString().trim()
         val password = etPassword.text.toString()
         val confirm  = etConfirmPassword.text.toString()
+
+        Log.d(TAG, "registerUser: Evaluating client side inputs for registration processing loop.")
 
         // Clear any previous inline errors
         tilName.error     = null
@@ -158,22 +189,30 @@ class Register : AppCompatActivity() {
             hasError = true
         }
 
-        if (hasError) return
+        if (hasError) {
+            Log.w(TAG, "registerUser: Registration aborted due to client-side input constraint validation failures.")
+            return
+        }
 
-        // All client-side checks passed — check DB for duplicate email
+        // All client-side checks passed — check DB for duplicate email records asynchronously
         thread {
+            Log.d(TAG, "Checking Room local database records for pre-existing account matches tied to: $email")
             val db       = AppDatabase.getDatabase(this)
             val existing = db.userDao().getUserByEmail(email)
 
             runOnUiThread {
                 if (existing != null) {
+                    Log.w(TAG, "Collision found: A transaction model profile tracking object already maps to email: $email")
                     tilEmail.error = "An account with this email already exists"
                 } else {
+                    // Unique email verified. Proceeding with record initialization on background thread
                     thread {
+                        Log.i(TAG, "Unique account verified. Inserting new User record into SQLite schema layout logs.")
                         db.userDao().insertUser(
                             User(name = name, email = email, passwordHash = password)
                         )
                         runOnUiThread {
+                            Log.d(TAG, "User registration process complete. Redirecting context window over to Login view activity.")
                             Toast.makeText(this, "Account created! Please sign in.", Toast.LENGTH_LONG).show()
                             startActivity(Intent(this@Register, Login::class.java))
                             finish()
@@ -184,7 +223,11 @@ class Register : AppCompatActivity() {
         }
     }
 
+    /**
+     * Redirects the runtime user display view back over to the Login activity container.
+     */
     fun navigateToLogin(view: View) {
+        Log.d(TAG, "navigateToLogin: Redirecting navigation pipeline target frame back to Login form.")
         startActivity(Intent(this@Register, Login::class.java))
     }
 }

@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -25,34 +26,49 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.concurrent.thread
 
+/**
+ * Activity responsible for processing and displaying financial data visualizations,
+ * including income/expense comparisons, category distribution charts, and granular transaction histories.
+ */
 class Analytics : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "AnalyticsActivity"
+    }
+
+    // UI Widgets for Summary metrics
     private lateinit var tvPeriodLabel:       TextView
     private lateinit var tvTotalIncome:       TextView
     private lateinit var tvTotalExpense:      TextView
     private lateinit var tvNetBalance:        TextView
+
+    // Custom Views and Containers
     private lateinit var llCategoryChart:     LinearLayout
     private lateinit var llTransactionList:  LinearLayout
     private lateinit var llGraphContainer:   LinearLayout
+    private lateinit var pieChartView:       PieChartView
 
+    // Filter Controls
     private lateinit var btnThisWeek:   MaterialButton
     private lateinit var btnThisMonth:  MaterialButton
     private lateinit var btnLastMonth:  MaterialButton
-    private lateinit var pieChartView: PieChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: Initializing Analytics view components")
         enableEdgeToEdge()
         setContentView(R.layout.activity_analytics)
 
         setupNavigation(this, R.id.btnAnalytics)
 
+        // Handle edge-to-edge system window padding configurations safely
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Initialize UI Elements
         tvPeriodLabel      = findViewById(R.id.tvPeriodLabel)
         tvTotalIncome      = findViewById(R.id.tvTotalIncome)
         tvTotalExpense     = findViewById(R.id.tvTotalExpense)
@@ -66,18 +82,33 @@ class Analytics : AppCompatActivity() {
         btnThisMonth  = findViewById(R.id.btnThisMonth)
         btnLastMonth  = findViewById(R.id.btnLastMonth)
 
-        btnThisWeek.setOnClickListener  { loadPeriodData("week") }
-        btnThisMonth.setOnClickListener { loadPeriodData("month") }
-        btnLastMonth.setOnClickListener { loadPeriodData("last_month") }
+        // Register filter button click interactions
+        btnThisWeek.setOnClickListener  {
+            Log.d(TAG, "Filter changed: This Week")
+            loadPeriodData("week")
+        }
+        btnThisMonth.setOnClickListener {
+            Log.d(TAG, "Filter changed: This Month")
+            loadPeriodData("month")
+        }
+        btnLastMonth.setOnClickListener {
+            Log.d(TAG, "Filter changed: Last Month")
+            loadPeriodData("last_month")
+        }
 
         loadPeriodData("month")
     }
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume: Refreshing analytics dataset defaults")
         loadPeriodData("month")
     }
 
+    /**
+     * Calculates the explicit ISO start and end string dates for a requested timeline profile.
+     * Triggers asynchronous background fetching once dates are established.
+     */
     private fun loadPeriodData(period: String) {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val cal = Calendar.getInstance()
@@ -107,22 +138,36 @@ class Analytics : AppCompatActivity() {
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH))
                 tvPeriodLabel.text = "Last Month"
                 updateButtonStyles(btnLastMonth)
+
+                Log.d(TAG, "Evaluating 'last_month' date bounds: $startDate to ${sdf.format(endCal.time)}")
                 fetchAndRender(startDate, sdf.format(endCal.time))
                 return
             }
+            else -> {
+                Log.e(TAG, "loadPeriodData: Received unsupported period type configuration string token: '$period'")
+            }
         }
+        Log.d(TAG, "Evaluating standard date bounds: $startDate to $endDate")
         fetchAndRender(startDate, endDate)
     }
 
+    /**
+     * Executes queries asynchronously to pull transaction information from Room database,
+     * compiling summaries and updating UI on the Main thread.
+     */
     private fun fetchAndRender(start: String, end: String) {
         thread {
+            Log.d(TAG, "fetchAndRender: Querying Room DB context for period dates $start to $end")
             val db = AppDatabase.getDatabase(this)
             val transactions = db.transactionDao().getTransactionsByDateRange(start, end)
+
+            Log.d(TAG, "Database returned ${transactions.size} records for calculation")
 
             var totalIncome = 0.0
             var totalExpense = 0.0
             val categoryTotals = mutableMapOf<String, Double>()
 
+            // Aggregate metrics split by financial context categories and statement classification tags
             for (tx in transactions) {
                 val type = tx.transactionType.lowercase(Locale.getDefault()).trim()
                 val categoryName = if (tx.category.isNullOrEmpty()) "other" else tx.category.lowercase(Locale.getDefault()).trim()
@@ -135,6 +180,7 @@ class Analytics : AppCompatActivity() {
                 }
             }
 
+            // Route gathered aggregates back to the Main UI Thread safely
             runOnUiThread {
                 tvTotalIncome.text  = "R %.2f".format(totalIncome)
                 tvTotalExpense.text = "R %.2f".format(totalExpense)
@@ -150,18 +196,27 @@ class Analytics : AppCompatActivity() {
         }
     }
 
+    /**
+     * Dynamically instantiates the vertical measurement layout structures displaying Income vs Expense comparisons.
+     */
     private fun renderGraphBars(income: Double, expense: Double) {
         llGraphContainer.removeAllViews()
         val maxVal = maxOf(income, expense, 1.0)
 
+        // Convert raw ratios into scaled percentage values capped with a structural minimum layout limit
         val incomeHeight  = ((income / maxVal) * 100).toInt().coerceAtLeast(8).dpToPx()
         val expenseHeight = ((expense / maxVal) * 100).toInt().coerceAtLeast(8).dpToPx()
+
+        Log.d(TAG, "renderGraphBars -> Generated income structural component height: ${incomeHeight}px, expense component height: ${expenseHeight}px")
 
         llGraphContainer.addView(createBarStack(incomeHeight, "R %.0f".format(income), "Income", "#4CAF50"))
         llGraphContainer.addView(View(this).apply { layoutParams = LinearLayout.LayoutParams(32.dpToPx(), 1) })
         llGraphContainer.addView(createBarStack(expenseHeight, "R %.0f".format(expense), "Expenses", "#ED4B00"))
     }
 
+    /**
+     * Factory function creating the structural individual layout items used inside the dynamic bar visualization.
+     */
     private fun createBarStack(barHeightPx: Int, amountStr: String, labelText: String, hexColor: String): LinearLayout {
         val column = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -193,11 +248,15 @@ class Analytics : AppCompatActivity() {
         return column
     }
 
+    /**
+     * Renders proportional list metrics tracking distribution allocations inside the total calculated expense budget.
+     */
     private fun renderCategoryBreakdown(categories: Map<String, Double>, totalExpense: Double) {
         llCategoryChart.removeAllViews()
         pieChartView.setData(categories)
 
         if (categories.isEmpty()) {
+            Log.d(TAG, "renderCategoryBreakdown: No categorical data available to build map layouts")
             pieChartView.setData(emptyMap())
             llCategoryChart.addView(TextView(this).apply {
                 text = "No expenses recorded for this period."
@@ -228,9 +287,13 @@ class Analytics : AppCompatActivity() {
         }
     }
 
+    /**
+     * Dynamically instantiates the lists mapping transaction metadata into interactable view groups.
+     */
     private fun renderTransactionsList(list: List<Transaction>) {
         llTransactionList.removeAllViews()
         if (list.isEmpty()) {
+            Log.d(TAG, "renderTransactionsList: Transaction item array dataset is empty")
             llTransactionList.addView(TextView(this).apply {
                 text = "No transactions found for this period."
                 textSize = 13f
@@ -255,6 +318,7 @@ class Analytics : AppCompatActivity() {
                 isClickable = true
                 isFocusable = true
 
+                // Structural background setup mapping custom borders and corners programmatically
                 val shapeDrawable = android.graphics.drawable.GradientDrawable().apply {
                     shape = android.graphics.drawable.GradientDrawable.RECTANGLE
                     setColor(Color.WHITE)
@@ -303,6 +367,7 @@ class Analytics : AppCompatActivity() {
             row.addView(ivChevron)
 
             row.setOnClickListener {
+                Log.d(TAG, "Transaction row entry clicked: ID=${tx.id}, Title='${tx.title}'")
                 showTransactionDetailBottomSheet(tx)
             }
 
@@ -310,7 +375,12 @@ class Analytics : AppCompatActivity() {
         }
     }
 
+    /**
+     * Inflates and shows a modal bottom sheet showing complete object records,
+     * including user receipt images loaded via Glide.
+     */
     private fun showTransactionDetailBottomSheet(transaction: Transaction) {
+        Log.d(TAG, "showTransactionDetailBottomSheet: Displaying breakdown sheet for explicit verification")
         val bottomSheetDialog = BottomSheetDialog(this)
         val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_transaction_detail, null)
         bottomSheetDialog.setContentView(sheetView)
@@ -338,11 +408,16 @@ class Analytics : AppCompatActivity() {
         }
         bsDate.text = "Logged: ${transaction.date}$ratingTag"
 
+        // Localized file input routing check before requesting view canvas allocation
         if (!transaction.imagePath.isNullOrEmpty() && File(transaction.imagePath).exists()) {
+            Log.d(TAG, "Local receipt image verified at path: ${transaction.imagePath}. Prompting injection stream workflow.")
             bsImage.visibility = View.VISIBLE
             bsNoPhotoLabel.visibility = View.GONE
             Glide.with(this).load(File(transaction.imagePath)).into(bsImage)
         } else {
+            if (!transaction.imagePath.isNullOrEmpty()) {
+                Log.e(TAG, "Stale image tracking string data found. Target file does not exist locally: ${transaction.imagePath}")
+            }
             bsImage.visibility = View.GONE
             bsNoPhotoLabel.visibility = View.VISIBLE
         }
@@ -350,6 +425,9 @@ class Analytics : AppCompatActivity() {
         bottomSheetDialog.show()
     }
 
+    /**
+     * Swaps selected state styles across filter buttons to maintain correct visual state hierarchy.
+     */
     private fun updateButtonStyles(selected: MaterialButton) {
         val selectedBgColor   = ColorStateList.valueOf(Color.parseColor("#15174D"))
         val unselectedBgColor = ColorStateList.valueOf(Color.TRANSPARENT)
@@ -371,5 +449,6 @@ class Analytics : AppCompatActivity() {
         }
     }
 
+    // Extension function converting integer DP metrics safely into exact pixel offsets
     private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
 }
